@@ -1,0 +1,9 @@
+.select{
+    @media (max-width: 768px) {
+        .ant-select-selector {
+          width: 100%;
+          text-align: left;
+          color:blue
+        }
+      }
+}

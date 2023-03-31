@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('name', 45);
             $table->string('phone', 45);
             $table->string('address', 255);
-            $table->enum('status', [0, 1])->default(1);
+            $table->enum('status', [0, 1])->default(0);
             $table->enum('role', ['advertiser','business','admin']);
             $table->timestamps();
         });

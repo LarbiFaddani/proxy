@@ -1,6 +1,6 @@
 import React, { useEffect,useState } from "react";
 import { useSelector } from "react-redux";
-import { Table, Spin, Tag, Button, Modal, Form, Input, Space,Switch, } from "antd";
+import { Table, Spin, Tag, Button, Modal, Form, Input, Space,Switch, Steps, } from "antd";
 import { RootState, useAppDispatch } from "../../../../store";
 import { getBusiness, addBusiness, updateBusiness } from "./businessApi";
 import { getLocation } from "../Location/locationApi";
@@ -13,14 +13,287 @@ import { addPlacement} from "../Placement/placementApi";
 import { Cascader } from 'antd';
 import type {BusinessType} from 'src/models/BusinessType'
 import "./business.css"
+import Schedule from "../Schedule/shedule";
+import type { IPlacement } from "src/models/placement";
 const Business: React.FC = () => {
   const [isModalOpen, setIsModalOpen]=useState<boolean>(false)
   const [isInactif, setIsInactif]=useState<boolean>(false)
   const [isModalMoreOpen, setIsModalMoreOpen]=useState<boolean>(false)
   const [editingBusiness, setEditingBusiness] = useState<IBusiness | undefined>(undefined);
   const [editStatus, setEditStatus] = useState<any>(undefined);
+  const [placement, setPlacement] = useState<any>()
   const [emailExists, setEmailExists] = useState(false);
+  const [part, setPart] = useState(1);
+  const [businessId, setBusinessId] = useState<number>()
+  const [step, setStep] = useState<number>(0);
+  const stepConst = <Steps
+    size="small"
+    current={step}
+    items={[
+      { title: 'Business infos' },
+      {
+        title: 'Placement'
+      },
+      {
+        title: 'Schedule'
+      },
+    ]}
+  />
+  const handleNextAndCreateBusiness = () => {
+      const id = Math.round(Math.random() * 10000);
+      //const id1 = Math.round(Math.random() * 10000);
+      setBusinessId(id);
+      const { confirm, location_id, ...rest } = form.getFieldsValue();
+      const valuesWithStatus = { ...rest, id: id, status: 1, location_id: parseInt(location_id[1]) }; // transform location_id value
+      console.log(valuesWithStatus);
+      dispatch(addBusiness(valuesWithStatus));
+      // .then(() => {
+      //   dispatch(addPlacement({name:placement,business_id:id, id:id1})); // dispatch the placement
+      //   dispatch(getBusiness());
+      // });
+      // setIsModalOpen(false);
+      // form.resetFields();
+       setPart(part + 1);
+       setStep(step + 1);
+      };
+
+
+  // const handleBack = () => {
+  //   setPart(part - 1);
+  //   setStep(step - 1);
+  //   };
+
+
+
+  const handleCreatePlacement = (data:IPlacement) => {
+    setPlacement({...data, business_id:businessId})
+    console.log(placement)
+    //dispatch(addPlacement(placement));
+    setPart(part + 1);
+    setStep(step + 1);
+  };
+  useEffect(() => {
+    dispatch(addPlacement(placement));
+  }, [
+    placement
+  ]);
+  const description = 'this is a description';
+  const renderForm = () => {
+    switch (part) {
+    case 1:
+    return (
+    <>
+    {editingBusiness &&
+    <Space>
+      <Button onClick={()=>setPart(1)}>Business</Button>
+      <Button onClick={()=>setPart(2)}>Placement</Button>
+      <Button onClick={()=>setPart(3)}>Schedule</Button>
+    </Space>}
+    <div className="steps">
+    {!editingBusiness && stepConst}
+  </div>
+    
+    
+    
+      <Form
+        {...formItemLayout}
+        form={form}
+        name="register"
+        initialValues={editingBusiness}
+        onFinish={editingBusiness ? handleEdit : handleNextAndCreateBusiness}
+        style={{ maxWidth: 600 }}
+        scrollToFirstError
+      >
+        <Form.Item
+          name="name"
+          label="Nom"
+          tooltip="Comment vous appelez les autres?"
+          rules={[{ required: true, message: 'Veuillez entrer votre nom!', whitespace: true }]}
+        >
+          <Input />
+        </Form.Item>
+  <Form.Item
+      name="email"
+      label="Email"
+      rules={[{type: 'email',message: 'The input is not a valid email!', },{ required: true, message: 'Please input your email!',},{ validator: checkEmailExists }, ]}
+      validateStatus={emailExists ? "error" : ""}
+      help={emailExists ? "Email already exists in the table!" : ""}
+    >
+      <Input />
+    </Form.Item>
+    {editingBusiness ? null :
+    <Form.Item
+      name="password"
+      label="Mot de passe"
+      rules={[{required: true,message: 'Veuillez entrer votre mot de passe!',},{
+      pattern: /^.{5,}$/,
+      message: 'mot de passe doit avoir au min 5 caracteres',
+    }]}
+      hasFeedback
+    >
+      <Input.Password />
+    </Form.Item>}
+    {editingBusiness?null:
+    <Form.Item
+      name="confirm"
+      label="Conf. du mot de passe"
+      dependencies={['password']}
+      hasFeedback
+      rules={[{required: true,message: 'Please confirm your password!',},
+      ({ getFieldValue }) => ({validator(_, value) { 
+        if (!value || getFieldValue('password') === value) { return Promise.resolve();} 
+          return Promise.reject(new Error('The two passwords that you entered do not match!'));
+        },}),
+      ]}
+    >
+      <Input.Password />
+    </Form.Item>}
+    <Form.Item
+      name="phone"
+      label="Téléphone"
+      rules={[{ required: true, message: 'Veuillez entrer votre téléphone!' }]}
+    >
+      <Input />
+    </Form.Item>
+
+    <Form.Item
+      name="address"
+      label="Adresse"
+      rules={[{ required: true, message: 'Veuillez entrer votre adresse!' }]}
+    >
+      <Input.TextArea showCount maxLength={250} />
+    </Form.Item>
+
+    <Form.Item
+      name="altitude"
+      label="Altitude"
+      rules={[{ required: true, message: 'Veuillez entrer votre altitude!' }]}
+    >
+      <Input type="number" />
+    </Form.Item>
+
+    <Form.Item
+      name="longitude"
+      label="Longitude"
+      rules={[{ required: true, message: 'Veuillez entrer votre longitude!' }]}
+    >
+      <Input type="number" />
+    </Form.Item>
+
+    <Form.Item
+      name="location_id"
+      label="Location"
+      rules={[{ required: true, message: 'Veuillez selectionner une location!' }]}
+    >
+      <Cascader options={citySectorsMap} onChange={onChangeDeux} />
+    </Form.Item>
+    <Form.Item
+      name="business_type_id"
+      label="Business Type:"
+      rules={[{ required: true, message: 'Veuillez selectionner un business type!' }]}
+    >
+      <Select>
+    {businessTypeList.map((item: BusinessType) => (
+      <Select.Option key={item.id} value={item.id}>
+        {item.name}
+      </Select.Option>
+    ))}
+  </Select>
+    </Form.Item>
+    <Form.Item
+      name="business_activity_id"
+      label="Business Activity:"
+      rules={[{ required: true, message: 'Veuillez selectionner un business activity!' }]}
+    >
+      <Select>
+    {businessActivityList.map((item: BusinessType) => (
+      <Select.Option key={item.id} value={item.id}>
+        {item.name}
+      </Select.Option>
+    ))}
+  </Select>
+    </Form.Item>
+    {/* {editingBusiness?null:<Form.Item
+      name="placement"
+      label="nom d'emplacement
+      tooltip="Quel est votre emplacement?"
+      rules={[{ required: true, message: 'Please enter a placement!' },{  message: 'The input is not a valid name!'}]}
+    >
+      <Input />
+    </Form.Item>} */}
+        <Form.Item {...tailFormItemLayout}>
+          {/* <Button type="primary" htmlType="submit">
+          {editingBusiness ? "MAJ" : "AJOUTER"}
+          </Button> */}
+          <Button type="primary" htmlType="submit">{editingBusiness ? "MAJ" : "NEXT"}</Button>
+        </Form.Item>
+      </Form>
+      
+    </>
+    );
+    case 2:
+    return (
+    <>
+    {editingBusiness &&
+    <Space>
+      <Button onClick={()=>setPart(1)}>Business</Button>
+      <Button onClick={()=>setPart(2)}>Placement</Button>
+      <Button onClick={()=>setPart(3)}>Schedule</Button>
+    </Space>}
+    <div className="steps">
+    {!editingBusiness && stepConst}
+  </div>
+    <Form
+    {...formItemLayout}
+    form={form}
+    name="register"
+    initialValues={editingBusiness}
+    onFinish={editingBusiness ? handleEdit : handleCreatePlacement}
+    style={{ maxWidth: 600 }}
+    scrollToFirstError
+  >
+    <Form.Item
+      name="name"
+      label="nom d'emplacement"
+      tooltip="Quel est votre emplacement?"
+      rules={[{ required: true, message: 'Please enter a placement!'},{message: 'The input is not a valid name!'}]}
+      >
+      <Input />
+  </Form.Item>
+  {/* <Button type="primary" htmlType="submit">Ajouter</Button> */}
   
+  <Space>
+    {/* <Button onClick={handleBack}>Back</Button> */}
+    {!editingBusiness?<Button type="primary" htmlType="submit">Next</Button>:<Button type="primary" htmlType="submit">MAJ</Button>}
+  </Space>
+  
+</Form>
+  
+    
+    </>
+    );
+    case 3:
+    return (
+    <>
+    {editingBusiness &&
+    <Space>
+      <Button onClick={()=>setPart(1)}>Business</Button>
+      <Button onClick={()=>setPart(2)}>Placement</Button>
+      <Button onClick={()=>setPart(3)}>Schedule</Button>
+    </Space>}
+    <div className="steps">
+    {!editingBusiness && stepConst}
+  </div>
+    <Schedule />
+    {/* <Button onClick={handleBack}>Back</Button> */}
+    </>
+    );
+    default:
+    return 1;
+    }
+    };
+    
+    // Define
 const dispatch = useAppDispatch();
 useEffect(() => {
     dispatch(getBusiness());
@@ -60,17 +333,6 @@ const locationList = useSelector(
       throw new Error("Email already exists in the table!");
     }
   };
-  // const citySectorsMap = locationList.reduce((acc:any, location:ILocation) => {
-  //   let city = location.city.toUpperCase();
-  //   if (!acc[city]) {
-  //     acc[city] = [];
-  //   }
-  //   if (!acc[city].includes(location.secteur)) {
-  //     acc[city].push({secteur: location.secteur,
-  //       id: location.id});
-  //   }
-  //   return acc;
-  // }, {});
   const citySectorsMap: Option[] = Object.entries(locationList.reduce((acc: any, location: ILocation) => {
     let city = location.city.toUpperCase();
     if (!acc[city]) {
@@ -135,6 +397,7 @@ const showModal = () => {
   
 const showModalMore = (record:any) => {
   setIsModalMoreOpen(true);
+  //console.log(record);
   setEditingBusiness({
     name: record.user.name,
     address:record.user.address,
@@ -143,8 +406,8 @@ const showModalMore = (record:any) => {
     region:record.location.region,
     city:record.location.city,
     secteur:record.location.secteur,
-    business_type_id:record.business_type_id,
-    business_activity_id:record.business_activity_id,
+    business_type_id:record.business_type.name,
+    business_activity_id:record.business_activity.name,
   })
 };
 useEffect(() => {
@@ -187,7 +450,7 @@ dataIndex: "id",
 key: "id",
 },
 {
-title: "NAME",
+title: "NOM",
 dataIndex: ["user", "name"],
 key: "user.name",
 },
@@ -207,17 +470,17 @@ dataIndex: ["user", "email"],
 key: "user.email",
 },
 {
-title: "LOCATION CITY",
+title: "VILLE DE LOCATION",
 dataIndex: ["location", "city"],
 key: "location.city",
 },
 {
-title: "LOCATION SECTEUR",
+title: "SECTEUR DE LOCATION ",
 dataIndex: ["location", "secteur"],
 key: "location.secteur",
 },
 {
-  title: "USER STATUS",
+  title: "STATUS",
   dataIndex: ["user", "status"],
   key: "user.status",
   render:(status:string)=>{
@@ -242,9 +505,10 @@ key: "location.secteur",
                address: record.user.address,
                location_id:record.location_id,
                business_type_id: record.business_type_id,
-               business_activity_id: record.business_activity_id,});
-               
-               showModal();}}
+               business_activity_id: record.business_activity_id,
+               //placement:record.placement
+              });
+              showModal();}}
       >
         Edit
       </Button>
@@ -257,20 +521,21 @@ key: "location.secteur",
 ];
 
 
-const handleCreate = () => {
-  const id = Math.round(Math.random() * 10000);
-  const id1 = Math.round(Math.random() * 10000);
-  const { placement, confirm, location_id, ...rest } = form.getFieldsValue();
-  const valuesWithStatus = { ...rest, id: id, status: 1, location_id: parseInt(location_id[1]) }; // transform location_id value
-  console.log(valuesWithStatus)
-  dispatch(addBusiness(valuesWithStatus)).then(() => {
-    dispatch(addPlacement({name:placement,business_id:id, id:id1})); // dispatch the placement
-    dispatch(getBusiness());
-  });
+//const handleCreate = () => {
+  // const id = Math.round(Math.random() * 10000);
+  // const id1 = Math.round(Math.random() * 10000);
+  // setBusinessId(id);
+  // const { placement, confirm, location_id, ...rest } = form.getFieldsValue();
+  // const valuesWithStatus = { ...rest, id: id, status: 1, location_id: parseInt(location_id[1]) }; // transform location_id value
+  // console.log(valuesWithStatus)
+  // dispatch(addBusiness(valuesWithStatus)).then(() => {
+  //   dispatch(addPlacement({name:placement,business_id:id, id:id1})); // dispatch the placement
+  //   dispatch(getBusiness());
+  // });
 
-  setIsModalOpen(false);
-  form.resetFields();
-};
+  // setIsModalOpen(false);
+  // form.resetFields();
+//};
 
 
 const formItemLayout = {
@@ -317,149 +582,15 @@ return (
         <p><span className="keyMoreInfos">Region: </span>{editingBusiness&&editingBusiness.region}</p>
         <p><span className="keyMoreInfos">City: </span>{editingBusiness&&editingBusiness.city}</p>
         <p><span className="keyMoreInfos">Secteur: </span>{editingBusiness&&editingBusiness.secteur}</p>
-        <p><span className="keyMoreInfos">Business Type name: </span>{editingBusiness&&editingBusiness.business_type_id}</p>
-        <p><span className="keyMoreInfos">Business Activity name: </span>{editingBusiness&&editingBusiness.business_activity_id}</p>
+        <p><span className="keyMoreInfos">Type de commerce: </span>{editingBusiness&&editingBusiness.business_type_id}</p>
+        <p><span className="keyMoreInfos">Activité de commerce: </span>{editingBusiness&&editingBusiness.business_activity_id}</p>
         </div>
         
       </Modal>
     <Modal width={800} style={{ marginBottom:165 }} title="Business Informations" open={isModalOpen} 
     onOk={handleOkOrCancel} onCancel={handleOkOrCancel}
-    >
-          <Form
-  {...formItemLayout}
-  form={form}
-  name="register"
-  initialValues={editingBusiness}
-  onFinish={editingBusiness ? handleEdit : handleCreate}
-  style={{ maxWidth: 600 }}
-  scrollToFirstError
->
- <Form.Item
-    name="email"
-    label="Email"
-    rules={[{type: 'email',message: 'The input is not a valid email!', },{ required: true, message: 'Please input your email!',},{ validator: checkEmailExists }, ]}
-    validateStatus={emailExists ? "error" : ""}
-    help={emailExists ? "Email already exists in the table!" : ""}
-  >
-    <Input />
-  </Form.Item>
-  {editingBusiness?null:
-  <Form.Item
-    name="password"
-    label="Mot de passe"
-    rules={[{required: true,message: 'Veuillez entrer votre mot de passe!',},{
-    pattern: /^.{5,}$/,
-    message: 'mot de passe doit avoir au min 5 caracteres',
-  }]}
-    hasFeedback
-  >
-    <Input.Password />
-  </Form.Item>}
-  {editingBusiness?null:
-  <Form.Item
-    name="confirm"
-    label="Conf. du mot de passe"
-    dependencies={['password']}
-    hasFeedback
-    rules={[{required: true,message: 'Please confirm your password!',},
-    ({ getFieldValue }) => ({validator(_, value) { 
-      if (!value || getFieldValue('password') === value) { return Promise.resolve();} 
-        return Promise.reject(new Error('The two passwords that you entered do not match!'));
-      },}),
-    ]}
-  >
-    <Input.Password />
-  </Form.Item>}
-  
-
-  <Form.Item
-    name="name"
-    label="Nom"
-    tooltip="Comment vous appelez les autres?"
-    rules={[{ required: true, message: 'Veuillez entrer votre nom!', whitespace: true }]}
-  >
-    <Input />
-  </Form.Item>
-  <Form.Item
-    name="phone"
-    label="Téléphone"
-    rules={[{ required: true, message: 'Veuillez entrer votre téléphone!' }]}
-  >
-    <Input />
-  </Form.Item>
-
-  <Form.Item
-    name="address"
-    label="Adresse"
-    rules={[{ required: true, message: 'Veuillez entrer votre adresse!' }]}
-  >
-    <Input.TextArea showCount maxLength={250} />
-  </Form.Item>
-
-  <Form.Item
-    name="altitude"
-    label="Altitude"
-    rules={[{ required: true, message: 'Veuillez entrer votre altitude!' }]}
-  >
-    <Input type="number" />
-  </Form.Item>
-
-  <Form.Item
-    name="longitude"
-    label="Longitude"
-    rules={[{ required: true, message: 'Veuillez entrer votre longitude!' }]}
-  >
-    <Input type="number" />
-  </Form.Item>
-
-  <Form.Item
-    name="location_id"
-    label="Location"
-    rules={[{ required: true, message: 'Veuillez selectionner une location!' }]}
-  >
-    <Cascader options={citySectorsMap} onChange={onChangeDeux} />
-  </Form.Item>
-  <Form.Item
-    name="business_type_id"
-    label="Business Type:"
-    rules={[{ required: true, message: 'Veuillez selectionner un business type!' }]}
-  >
-    <Select>
-  {businessTypeList.map((item: BusinessType) => (
-    <Select.Option key={item.id} value={item.id}>
-      {item.name}
-    </Select.Option>
-  ))}
-</Select>
-  </Form.Item>
-  <Form.Item
-    name="business_activity_id"
-    label="Business Activity:"
-    rules={[{ required: true, message: 'Veuillez selectionner un business activity!' }]}
-  >
-    <Select>
-  {businessActivityList.map((item: BusinessType) => (
-    <Select.Option key={item.id} value={item.id}>
-      {item.name}
-    </Select.Option>
-  ))}
-</Select>
-  </Form.Item>
-  {editingBusiness?null:<Form.Item
-    name="placement"
-    label="nom d'emplacement"
-    tooltip="Quel est votre emplacement?"
-    rules={[{ required: true, message: 'Please enter a placement!' },{  message: 'The input is not a valid name!'}]}
-  >
-    <Input />
-  </Form.Item>}
-      <Form.Item {...tailFormItemLayout}>
-        <Button type="primary" htmlType="submit">
-        {editingBusiness ? "MAJ" : "AJOUTER"}
-        </Button>
-      </Form.Item>
-    </Form>
-    
+    >{renderForm()}
+          
     </Modal>
     {!isLoadingTable ? (
     <Table

@@ -64,8 +64,8 @@ const PlacementManagement: React.FC = () => {
     const columns = [ 
         {title: "#ID",dataIndex: "id", key: "id",}, 
         {title: "Nom", dataIndex: "name", key: "nom",}, 
-        {title: "Nom du business", dataIndex: ["business","user", "name"], key: "business name",    },
-        {title: "Email du business ", dataIndex: ["business","user", "email"], key: "business email",    },  
+        //{title: "Nom du business", dataIndex: ["business","user", "name"], key: "business name",    },
+        //{title: "Email du business ", dataIndex: ["business","user", "email"], key: "business email",    },  
         {title: "Actions",
          key: "actions",
          render: (text: any, record: IPlacement) =>

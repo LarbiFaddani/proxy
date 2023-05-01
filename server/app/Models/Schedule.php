@@ -10,9 +10,11 @@ class Schedule extends Model
 {
     use HasFactory;
     protected $fillable = ['id','opening_hour', 'closing_hour', 'day', 'business_id'];
-    protected $with = ['business'];
-    public function business(): BelongsTo
-    {
-        return $this->belongsTo(Business::class);
-    }
+    protected $with = [
+        //'business'
+    ];
+    // public function business(): BelongsTo
+    // {
+    //     return $this->belongsTo(Business::class);
+    // }
 }

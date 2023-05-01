@@ -12,11 +12,12 @@ class Business extends User
 
     protected $with = [
         'location',
-    'user',
-    //'placement',
-    'business_type',
-    'business_activity'
- ];
+        'user',
+        'placement',
+        'business_type',
+        'business_activity',
+        'schedule',
+    ];
     protected $fillable = ['id','user_id', 'email', 'password', 'status', 'name', 'phone', 'address', 'location_id','role', 'longitude', 'altitude', 'business_type_id', 'business_activity_id'];
 
     public function location()
@@ -35,9 +36,13 @@ class Business extends User
     {
         return $this->belongsTo(BusinessActivity::class);
     }
-    // public function placement()
-    // {
-    //     return $this->hasMany(Placement::class);
-    // }
+    public function placement()
+    {
+        return $this->hasMany(Placement::class);
+    }
+    public function schedule()
+    {
+        return $this->hasMany(Schedule::class);
+    }
 }
 

@@ -5,6 +5,16 @@ import type { ISchedule } from "src/models/schedule";
 const url = `${baseUrl}/schedules`;
 const urlDelAll = `${baseUrl}/schedules_business`;
 
+export const getSchedule = createAsyncThunk("schedule/getSchedule", async () => {
+  try {
+    const response = await fetch(`${url}`);
+    const data = await response.json();
+    return data
+  } catch (error) {
+      console.log(error)
+  }
+});
+
 export const addSchedule = createAsyncThunk('schedule/addSchedule',async (schedule: ISchedule) => {
     try {
       const response = await fetch(`${url}`, {
@@ -22,7 +32,7 @@ export const addSchedule = createAsyncThunk('schedule/addSchedule',async (schedu
 });
 export const deleteSchedule = createAsyncThunk(
   "Schedule/deleteSchedule",
-  async (id: number) => {
+  async (id: any) => {
     try {
       await fetch(`${urlDelAll}/${id}`, {
         method: "DELETE",

@@ -10,16 +10,16 @@ class Placement extends Model
     use HasFactory;
 
     protected $fillable = ['id', 'name', 'business_id'];
-    protected $with = ['business',
-            'tracking',
-        ];
+    // protected $with = [//'business',
+    //         'tracking',
+    //     ];
     public function business(): BelongsTo
     {
-        return $this->belongsTo(Business::class);
+        return $this->belongsTo(Business::class ,'business_id' );
     }
-    public function tracking(): BelongsTo
-    {
-        return $this->belongsTo(Tracking::class);
-    }
+    // public function tracking(): BelongsTo
+    // {
+    //     return $this->belongsTo(Tracking::class);
+    // }
 
 }

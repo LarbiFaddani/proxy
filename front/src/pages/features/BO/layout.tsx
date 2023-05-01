@@ -26,7 +26,7 @@ import CampaignTable from './campaign/campaign';
 import BusinessTypeManagement from './businessType/businessType';
 import Params from './parametres/parameters';
 import BusinessActivities from './businessActivity/businessActivity';
-
+const logo = require("./../../../assests/images/logo.png");
 const { Content, Sider } = Layout;
 
 const items: MenuProps['items'] = [
@@ -67,15 +67,14 @@ const LayoutApp: React.FC = () => {
           collapsible
           collapsed={collapsed}
         >
-          <div style={{ height: 32, margin: 16 }}>
-            <Link to="/">
-              <img
-                src="src/assests/images/logo.png"
-                alt="logo"
-                style={{ width: '50px', height: '50px' }}
-              />
-            </Link>
-          </div>
+          {!isFullscreen?
+          <Link to="/">
+              <img src={logo} alt="logo" style={{ width: '180px', height: '60px' , margin: 10}}/>
+          </Link>
+          :<Link to="/">
+              <img src={logo} alt="logo" style={{ width: '60px', height: '60px' , margin: 10}}/>
+          </Link>}
+          
           <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} items={items} />
         </Sider>
         <Layout className="site-layout" style={{ marginLeft:isFullscreen? 75 : 200}}>

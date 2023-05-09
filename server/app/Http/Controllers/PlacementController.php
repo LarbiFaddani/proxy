@@ -35,7 +35,6 @@ class PlacementController extends Controller
     return response($placements, 200);
 }
 
-
     public function store(Request $request)
     {
         $data = $request->validate([

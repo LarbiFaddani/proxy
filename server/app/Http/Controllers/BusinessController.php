@@ -27,6 +27,7 @@ class BusinessController extends Controller
             $businesses->where('altitude', 'LIKE', '%'.$request->altitude.'%');
         }
         //http://127.0.0.1:8000/api/businesses?sort_by=user_id&sort_dir=asc
+        $businesses->orderBy('created_at', 'desc');
         return response($businesses->get(), 200);
     }
 

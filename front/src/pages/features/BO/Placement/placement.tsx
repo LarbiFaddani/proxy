@@ -7,7 +7,7 @@ import {
   getPlacement,
   addPlacement,
   updatePlacement,
-  deletePlacement,
+  // deletePlacement,
 } from "./placementApi";
 import type { IPlacement } from "src/models/placement";
 //import type { IBusiness } from "src/models/Business";
@@ -71,10 +71,10 @@ const PlacementManagement: React.FC = () => {
          render: (text: any, record: IPlacement) =>
          (<> 
             <Space>
-                <Button onClick={() => { setEditingPlacement(record); showModal();}}> Edit </Button>         
-                <Button type="primary" danger 
+                <Button onClick={() => { setEditingPlacement(record); showModal();}} style={{ backgroundColor: "#ffc107" }}> Edit </Button>         
+                {/* <Button type="primary" danger 
                     onClick={() =>handleDelete(record.id)}
-                    >Delete </Button>
+                    >Delete </Button> */}
             </Space>
           </>),
     },
@@ -112,12 +112,12 @@ const PlacementManagement: React.FC = () => {
     };
 
   
-    const handleDelete = (id: number) => {
-      //console.log(id);
-      dispatch(deletePlacement(id)).then(() => {
-        dispatch(getPlacement());
-      });
-    };
+    // const handleDelete = (id: number) => {
+    //   //console.log(id);
+    //   dispatch(deletePlacement(id)).then(() => {
+    //     dispatch(getPlacement());
+    //   });
+    // };
   
     const formItemLayout = {
       labelCol: {

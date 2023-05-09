@@ -93,7 +93,7 @@ const Business: React.FC = () => {
         });
       }
     });
-    daysOfWeek.forEach(day => {
+    {!editingBusiness&&daysOfWeek.forEach(day => {
       if (hours[day]) {
         hours[day].forEach((hour:any) => {
           dispatch(addSchedule({
@@ -106,11 +106,10 @@ const Business: React.FC = () => {
            });
         });
       }
-    });
+    });}
     setInputHours({});
     setButton(false);
     setHours({});
-
   }
   const handleOpenTimeChange = (time: any) => {
     setOpen(time.format('HH:mm:ss'));

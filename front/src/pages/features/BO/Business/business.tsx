@@ -15,7 +15,7 @@ import { Cascader } from 'antd';
 import { getSchedule } from "src/pages/features/BO/Schedule/scheduleApi";
 import type {BusinessType} from 'src/models/BusinessType'
 import "./business.css"
-import type {ISchedule} from "src/models/schedule";
+// import type {ISchedule} from "src/models/schedule";
 //import type { IPlacement } from "src/models/placement";
 import { addSchedule, deleteSchedule } from 'src/pages/features/BO/Schedule/scheduleApi';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
@@ -44,7 +44,6 @@ const Business: React.FC = () => {
       },
     ]}
   />
-
 
   // const [required, setRequired] = useState<boolean>(true);
   //const [selectedBusinessId, setSelectedBusinessId] = useState<number>(0);

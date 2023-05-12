@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Table, Spin, Button, Modal, Form, Input } from "antd";
+import { Table, Spin, Button, Modal, Form, Input, Space } from "antd";
 import { RootState, useAppDispatch } from "src/store";
 import {
   getBusinessType,
@@ -20,11 +20,23 @@ const BusinessTypeManagement: React.FC = () => {
       name: "",
     });
     const dispatch = useAppDispatch();
-  
+    useEffect(() => {
+      if (isModalOpen && !editingBusinessType) {
+        form.setFieldsValue({
+          name: "",
+        });
+      }
+    }, [isModalOpen]);
     useEffect(() => {
       dispatch(getBusinessType());
     }, [dispatch]);
-  
+    useEffect(() => {
+      if (isModalOpen && editingBusinessType) {
+        form.setFieldsValue({
+          name: editingBusinessType.name
+        });
+      }
+    }, [isModalOpen]);
     const businessTypeList = useSelector(
       (state: RootState) => state.businessType.values
     );
@@ -36,7 +48,12 @@ const BusinessTypeManagement: React.FC = () => {
       setIsModalOpen(true);
     };
   
-    const columns = [    {      title: "ID",      dataIndex: "id",      key: "id",    },    {      title: "Name",      dataIndex: "name",      key: "name",    },    {      title: "Actions",      key: "actions",      render: (text: any, record: BusinessType) => (        <>          <Button            onClick={() => {              setEditingBusinessType(record);              setIsModalOpen(true);            }}          >            Edit          </Button>          <Button type="primary" danger onClick={() => handleDelete(record.id)}>            Delete          </Button>        </>      ),    },  ];
+    const columns = [    {      title: "ID",      dataIndex: "id",      key: "id",    },    {      title: "Name",      dataIndex: "name",      key: "name",    },    {      title: "Actions",      key: "actions",      render: (text: any, record: BusinessType) => (
+    <Space> 
+      <Button onClick={() => { setEditingBusinessType(record); setIsModalOpen(true); }}>Edit</Button>
+      <Button type="primary" danger onClick={() => handleDelete(record.id)}> Delete  </Button>
+    </Space> 
+    ),    },  ];
   
     const handleSubmit = () => {
       console.log(businessType);
@@ -44,9 +61,20 @@ const BusinessTypeManagement: React.FC = () => {
         dispatch(getBusinessType());
       });
     };
-  
+    // const handleCreate = () => {
+    //   const values = form.getFieldsValue();
+    //   dispatch(addPlacement(values)).then(() => {
+    //     dispatch(getPlacement());
+    //   });
+    //   setIsModalOpen(false);
+    //   handleSubmit();
+    //   form.resetFields();
+    // };
     const handleCreate = (data: BusinessType) => {
       console.log(data);
+      dispatch(addBusinessType(data)).then(() => {
+            dispatch(getBusinessType());
+          });
       setBusinessType({
         id: Math.round(Math.random() * 10000),
         name: data.name,
@@ -66,7 +94,7 @@ const BusinessTypeManagement: React.FC = () => {
     };
   
     const handleDelete = (id: number) => {
-      console.log(id);
+      //console.log(id);
       dispatch(deleteBusinessType(id)).then(() => {
         dispatch(getBusinessType());
       });
@@ -107,7 +135,7 @@ const BusinessTypeManagement: React.FC = () => {
   
     return (
       <div>
-        <Button type="primary" onClick={showModal}>
+        <Button style={{ margin:15 }} type="primary" onClick={showModal}>
           Ajouter un business Type
         </Button>
         <Modal
@@ -128,7 +156,7 @@ const BusinessTypeManagement: React.FC = () => {
   <Form.Item
     name="name"
     label="Name"
-    rules={[      {        required: true,        message: "Please input business type name!",      },    ]}
+    rules={[{required: true,message: "Please input business type name!",},]}
   >
     <Input />
   </Form.Item>
@@ -144,6 +172,7 @@ const BusinessTypeManagement: React.FC = () => {
         dataSource={businessTypeList}
         columns={columns}
         rowKey="id"
+        scroll={{ x: 400 }}
     />
     ) : (
     <div style={{ textAlign: "center", marginTop: "20%" }}>

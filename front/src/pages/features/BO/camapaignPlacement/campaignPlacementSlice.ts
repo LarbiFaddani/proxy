@@ -22,6 +22,4 @@ export const CampaignPlacementSlice = createSlice({
         },
     }
 })
-//export const { increment, decrement, incrementByAmount } = counterSlice.actions
-
 export default CampaignPlacementSlice.reducer

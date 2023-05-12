@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { getBusiness
-    //,addBusiness, deleteBusiness,  updateBusiness 
     } from "./businessApi";
 
     export const businessSlice = createSlice({
@@ -25,7 +24,4 @@ import { getBusiness
             },
         }
     })
-    
-//export const { increment, decrement, incrementByAmount } = counterSlice.actions
-
 export default businessSlice.reducer

@@ -7,13 +7,10 @@ import {
   getPlacement,
   addPlacement,
   updatePlacement,
-  // deletePlacement,
 } from "./placementApi";
 import type { IPlacement } from "src/models/placement";
-//import type { IBusiness } from "src/models/Business";
 
 const PlacementManagement: React.FC = () => {
-  //const [selectedBusinessId, setSelectedBusinessId] = useState<number>(0);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [editingPlacement, setEditingPlacement] = useState<
       IPlacement | undefined
@@ -64,24 +61,18 @@ const PlacementManagement: React.FC = () => {
     const columns = [ 
         {title: "#ID",dataIndex: "id", key: "id",}, 
         {title: "Nom", dataIndex: "name", key: "nom",}, 
-        //{title: "Nom du business", dataIndex: ["business","user", "name"], key: "business name",    },
-        //{title: "Email du business ", dataIndex: ["business","user", "email"], key: "business email",    },  
         {title: "Actions",
          key: "actions",
          render: (text: any, record: IPlacement) =>
          (<> 
             <Space>
-                <Button onClick={() => { setEditingPlacement(record); showModal();}} style={{ backgroundColor: "#ffc107" }}> Edit </Button>         
-                {/* <Button type="primary" danger 
-                    onClick={() =>handleDelete(record.id)}
-                    >Delete </Button> */}
+                <Button onClick={() => { setEditingPlacement(record); showModal();}}> Edit </Button>
             </Space>
           </>),
     },
     ];
     const {Option} = Select;
     const handleSubmit = () => {
-      //console.log(placement);
       dispatch(addPlacement(placement)).then(() => {
         dispatch(getPlacement());
       });
@@ -110,14 +101,6 @@ const PlacementManagement: React.FC = () => {
         });
       }
     };
-
-  
-    // const handleDelete = (id: number) => {
-    //   //console.log(id);
-    //   dispatch(deletePlacement(id)).then(() => {
-    //     dispatch(getPlacement());
-    //   });
-    // };
   
     const formItemLayout = {
       labelCol: {
@@ -155,7 +138,7 @@ const PlacementManagement: React.FC = () => {
     return (
       <div>
         <Button type="primary" onClick={showModal} style={{ margin:15 }}>
-          Ajouter un placement
+          Ajouter un emplacement
         </Button>
         <Modal
           width={800}
@@ -187,7 +170,7 @@ const PlacementManagement: React.FC = () => {
   </Form.Item>
   <Form.Item
     name="business_id"
-    label="Business_id"
+    label="Business Owner"
     rules={[
       {
         required: true,

@@ -15,8 +15,6 @@ import { Cascader } from 'antd';
 import { getSchedule } from "src/pages/features/BO/Schedule/scheduleApi";
 import type {BusinessType} from 'src/models/BusinessType'
 import "./business.css"
-// import type {ISchedule} from "src/models/schedule";
-//import type { IPlacement } from "src/models/placement";
 import { addSchedule, deleteSchedule } from 'src/pages/features/BO/Schedule/scheduleApi';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import Checkbox from "antd/es/checkbox";
@@ -45,8 +43,6 @@ const Business: React.FC = () => {
     ]}
   />
 
-  // const [required, setRequired] = useState<boolean>(true);
-  //const [selectedBusinessId, setSelectedBusinessId] = useState<number>(0);
   const daysOfWeek = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"];
   const [inputHours, setInputHours] = useState<{ [key: string]: boolean }>({});
   const [open, setOpen] = useState<string>("");
@@ -150,15 +146,18 @@ const Business: React.FC = () => {
     placement
   ]);
   const renderForm2 = () => {
+    const renderButtons1 = () => (
+      <Space>
+          <Button onClick={()=>setPart(1)}>Business</Button>
+          <Button onClick={()=>setPart(2)}>Placement</Button>
+          <Button onClick={()=>setPart(3)}>Schedule</Button>
+        </Space>
+    );
     switch (part) {
       case 1:
     return (
       <div>
-        <Space>
-      <Button onClick={()=>setPart(1)}>Business</Button>
-      <Button onClick={()=>setPart(2)}>Placement</Button>
-      <Button onClick={()=>setPart(3)}>Schedule</Button>
-        </Space>
+        {renderButtons1()}
         <p><span className="keyMoreInfos">Name</span>: {editingBusiness && editingBusiness.name}</p>
         <p><span className="keyMoreInfos">Address: </span>{editingBusiness && editingBusiness.address}</p>
         <p><span className="keyMoreInfos">Phone: </span>{editingBusiness && editingBusiness.phone}</p>
@@ -174,20 +173,12 @@ const Business: React.FC = () => {
     case 2:
       return(
     <>
-    <Space>
-      <Button onClick={()=>setPart(1)}>Business</Button>
-      <Button onClick={()=>setPart(2)}>Placement</Button>
-      <Button onClick={()=>setPart(3)}>Schedule</Button>
-    </Space>
+    {renderButtons1()}
     <p><span className="keyMoreInfos">Placement: </span>{editingBusiness && editingBusiness.placement}</p>
         </>);
     case 3:
       return(<>
-      <Space>
-        <Button onClick={()=>setPart(1)}>Business</Button>
-        <Button onClick={()=>setPart(2)}>Placement</Button>
-        <Button onClick={()=>setPart(3)}>Schedule</Button>
-      </Space>
+      {renderButtons1()}
       {editingBusiness?.schedule && (() => {
   let previousDay = '';
   return editingBusiness.schedule.map((schedule: any) => {
@@ -210,19 +201,25 @@ const Business: React.FC = () => {
     default:return 1}
   }
   const renderForm = () => {
+    const renderButtons = () => (
+      <Space>
+        <Button onClick={() => setPart(1)}>Business</Button>
+        <Button onClick={() => setPart(2)}>Placement</Button>
+        <Button onClick={() => setPart(3)}>Schedule</Button>
+      </Space>
+    );
+  
+    const renderSteps = () => (
+      <div className="steps">
+        {!editingBusiness && stepConst}
+      </div>
+    );
     switch (part) {
     case 1:
     return (
     <>
-    {editingBusiness &&
-    <Space>
-      <Button onClick={()=>setPart(1)}>Business</Button>
-      <Button onClick={()=>setPart(2)}>Placement</Button>
-      <Button onClick={()=>setPart(3)}>Schedule</Button>
-    </Space>}
-    <div className="steps">
-    {!editingBusiness && stepConst}
-  </div>
+    {editingBusiness && renderButtons()}
+    {renderSteps()}
       <Form
         {...formItemLayout}
         form={form}
@@ -351,15 +348,8 @@ const Business: React.FC = () => {
     case 2:
     return (
     <>
-    {editingBusiness &&
-    <Space>
-      <Button onClick={()=>setPart(1)}>Business</Button>
-      <Button onClick={()=>setPart(2)}>Placement</Button>
-      <Button onClick={()=>setPart(3)}>Schedule</Button>
-    </Space>}
-    <div className="steps">
-    {!editingBusiness && stepConst}
-  </div>
+    {editingBusiness && renderButtons()}
+    {renderSteps()}
     <Form
     {...formItemLayout}
     form={form}
@@ -388,15 +378,8 @@ const Business: React.FC = () => {
     case 3:
     return (
     <>
-    {editingBusiness &&
-    <Space>
-      <Button onClick={()=>setPart(1)}>Business</Button>
-      <Button onClick={()=>setPart(2)}>Placement</Button>
-      <Button onClick={()=>setPart(3)}>Schedule</Button>
-    </Space>}
-    <div className="steps">
-    {!editingBusiness && stepConst}
-  </div>
+    {editingBusiness && renderButtons()}
+    {renderSteps()}
   <div style={{textAlign: "center", padding:"4em"}}>
       {daysOfWeek.map(day => (
         <div key={day} style={{ fontWeight:"bold" }}>
@@ -610,7 +593,6 @@ useEffect(() => {
       placement: editingBusiness.placement,
       placement_id: editingBusiness.placement_id,
     });
-    // {editingBusiness&&setBusinessId(editingBusiness.id);}
   }
 }, [isModalOpen]);
 

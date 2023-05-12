@@ -22,7 +22,7 @@ import PlacementManagement from './Placement/placement';
 import Schedule from './Schedule/shedule';
 import { Link } from 'react-router-dom';
 import { Header } from 'antd/es/layout/layout';
-import CampaignTable from './campaign/campaign';
+// import CampaignTable from './campaign/campaignForm'
 import BusinessTypeManagement from './businessType/businessType';
 import Params from './parametres/parameters';
 import BusinessActivities from './businessActivity/businessActivity';
@@ -97,7 +97,7 @@ const LayoutApp: React.FC = () => {
               <Route path="/placements" element={<PlacementManagement />} />
               <Route path="/schedules" element={<Schedule />} /> 
               <Route path="/types" element={<BusinessTypeManagement/>} />
-              <Route path="/campaigns" element={<CampaignTable/>} />
+              {/* <Route path="/campaigns" element={<CampaignTable/>} /> */}
               <Route path="/activities" element={<BusinessActivities/>}/>
               <Route path="/Parameters" element={<Params/>} />
               {/* <Route path="Locations" element={} */}

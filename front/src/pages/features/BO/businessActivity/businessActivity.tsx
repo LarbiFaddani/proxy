@@ -20,7 +20,27 @@ const BusinessActivities: React.FC = () => {
       name: "",
     });
     const dispatch = useAppDispatch();
-  
+    useEffect(() => {
+      if (isModalOpen && !editingBusinessActivity) {
+        form.setFieldsValue({
+          name: "",
+        });
+      }
+    }, [isModalOpen]);
+    useEffect(() => {
+      if (isModalOpen && editingBusinessActivity) {
+        form.setFieldsValue({
+          name: editingBusinessActivity.name
+        });
+      }
+    }, [isModalOpen]);
+    useEffect(() => {
+      if (isModalOpen && !editingBusinessActivity) {
+        form.setFieldsValue({
+          name: "",
+        });
+      }
+    }, [isModalOpen]);
     useEffect(() => {
       dispatch(getBusinessActivity());
     }, [dispatch]);
@@ -49,6 +69,9 @@ const BusinessActivities: React.FC = () => {
   
     const handleCreate = (data: BusinessActivity) => {
       console.log(data);
+      dispatch(addBusinessActivity(data)).then(() => {
+        dispatch(getBusinessActivity());
+      });
       setbusinessactivity({
         id: Math.round(Math.random() * 10000),
         name: data.name,
@@ -56,10 +79,6 @@ const BusinessActivities: React.FC = () => {
       handleSubmit();
       setIsModalOpen(false);
     };
-
-
-
-
 
     const handleEdit = (data: BusinessActivity) => {
       if(editingBusinessActivity&&editingBusinessActivity.id){
@@ -72,16 +91,14 @@ const BusinessActivities: React.FC = () => {
       });
     }
     };
-    
-  
-   
+
     const handleDelete = (id: number) => {
       console.log(id);
       dispatch(deleteBusinessActivity(id)).then(() => {
         dispatch(getBusinessActivity());
       });
     };
-  
+
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -117,7 +134,7 @@ const BusinessActivities: React.FC = () => {
   
     return (
       <div>
-        <Button type="primary" onClick={showModal} >
+        <Button style={{ margin:15 }} type="primary" onClick={showModal} >
           Ajouter un business Activity
         </Button>
         <Modal
@@ -159,6 +176,7 @@ const BusinessActivities: React.FC = () => {
         dataSource={businessActivityList}
         columns={columns}
         rowKey="id"
+        scroll={{ x: 400 }}
     />
     ) : (
     <div style={{ textAlign: "center", marginTop: "20%" }}>

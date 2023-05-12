@@ -1,7 +1,6 @@
 import { Checkbox, TimePicker, Space, Select } from 'antd';
 import Button from 'antd/es/button';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
-//import Form from 'antd/es/form';
 import type React from 'react'
 import "./schedule.css"
 import { useEffect, useState } from 'react';

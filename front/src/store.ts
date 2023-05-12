@@ -3,7 +3,7 @@ import businessReducer from '../src/pages/features/BO/Business/businessSlice'
 import locationReducer from '../src/pages/features/BO/Location/locationSlice'
 import scheduleReducer from './pages/features/BO/Schedule/scheduleSlice'
 import businessTypeReducer from '../src/pages/features/BO/businessType/businessTypeSlice'
-import campaignReducer from '../src/pages/features/BO/campaign/campaignSlice'
+//import campaignReducer from '../src/pages/features/BO/campaign/campaignSlice'
 import PlacementReducer from './pages/features/BO/Placement/placementSlice'
 import AdvertiserReducer from'./pages/features/BO/advertiser/advertiserSlice'
 import parametersReducer from '../src/pages/features/BO/parametres/parametersSlice';
@@ -18,7 +18,7 @@ export const store = configureStore({
     business: businessReducer,
     location: locationReducer,
     businessType: businessTypeReducer,
-    campaign: campaignReducer,
+    //campaign: campaignReducer,
     businessActivity: businessActivityReducer,
     placement:PlacementReducer,
     advertiser:AdvertiserReducer,

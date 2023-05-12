@@ -16,9 +16,6 @@ export const getBusinessActivity = createAsyncThunk('business_activities/getBusi
   }
 });
 
-
-
-
 export const addBusinessActivity = createAsyncThunk('business_Activities/addBusinessActivity', async (businessActivity: BusinessActivity) => {
   try {
     const response = await fetch(`${url}`, {
@@ -36,12 +33,6 @@ export const addBusinessActivity = createAsyncThunk('business_Activities/addBusi
     throw error;
   }
 });
-
-
-
-
-
-
 
 export const updateBusinessActivity = createAsyncThunk(
   'business_Activity/updateBusinessActivity',
@@ -64,32 +55,11 @@ export const updateBusinessActivity = createAsyncThunk(
     }
   },)
 
-
-/*export const updateBusinessActivity = createAsyncThunk(
-  'business_Activity/updateBusinessActivity',
-  async (id:number) => {
-    try {
-      const response = await fetch(`http://127.0.0.1:8000/api/business_activity/${id}`, {
-        method: 'PUT',
-        body: JSON.stringify(id),
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      });
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  },
-);*/
 export const deleteBusinessActivity = createAsyncThunk(
     "business_Activity/deleteBusinessActivity",
     async (id: number) => {
       try {
-        await fetch(`http://127.0.0.1:8000/api/business_activity/${id}`, {
+        await fetch(`${url}/${id}`, {
           method: "DELETE",
         });
         return id;

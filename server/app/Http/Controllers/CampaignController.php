@@ -21,37 +21,37 @@ class CampaignController extends Controller
 
     public function store(Request $request)
     {
+        $regEx1 = 'bail|required';
         $data = $request->validate([
             'name'=> 'bail|required|string',
-            'budget_max'=> 'bail|required',
-            'begin_date' => 'bail|required',
-            'end_date' => 'bail|required',
+            'budget_max'=> $regEx1,
+            'begin_date' => $regEx1,
+            'end_date' => $regEx1,
             'file' => 'bail|string',
             'display_hours'=>'bail',
             'url'=>'bail|string',
-            'advertiser_id'=> 'bail|required'
+            'advertiser_id'=> $regEx1
 
         ]);
 
             Campaign::create($data);
              // récupérer l'ID de la campaign
-            $campaign_id = $campaign->id;
             return response()->json('Campaign Created', 201);
     }
 
     public function update(Request $request, Campaign $Campaign)
     {
-
+        $regEx1 = 'bail|required';
         $data=$request->validate(['name'=> 'bail|string',
         'name'=> 'bail|required|string',
-        'budget_max'=> 'bail|required',
-        'begin_date' => 'bail|required',
-        'end_date' => 'bail|required',
+        'budget_max'=> $regEx1,
+        'begin_date' => $regEx1,
+        'end_date' => $regEx1,
         'file' => 'bail|string',
         'display_hours'=>'bail',
         'url'=>'bail|string',
 
-        'advertiser_id'=> 'bail|required'
+        'advertiser_id'=> $regEx1
     ]);
         $Campaign = Campaign::findOrFail($Campaign->id);
         $Campaign->update($data);

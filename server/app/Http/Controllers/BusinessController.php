@@ -11,20 +11,20 @@ class BusinessController extends Controller
     public function index(Request $request)
     {
         $businesses = Business::query();
-        if ($request->has('id')) {
+        if ($request->has('id')){
             $businesses->where('id', $request->id);
         }
-        if ($request->has('user_id')) {
-            $businesses->where('user_id',$request->user_id);
+        if ($request->has('user_id')){
+            $businesses->where('user_id',$request->user_id);            
         }
-        if ($request->has('location_id')) {
-            $businesses->where('location_id', 'LIKE', '%'.$request->location_id.'%');
+        if ($request->has('location_id')){
+            $businesses->where('location_id', 'LIKE', '%'.$request->location_id.'%');            
         }
-        if ($request->has('longitude')) {
+        if ($request->has('longitude')){
             $businesses->where('longitude', 'LIKE', '%'.$request->longitude.'%');
         }
-        if ($request->has('altitude')) {
-            $businesses->where('altitude', 'LIKE', '%'.$request->altitude.'%');
+        if ($request->has('altitude')){
+            $businesses->where('altitude', 'LIKE', '%'.$request->altitude.'%');            
         }
         //http://127.0.0.1:8000/api/businesses?sort_by=user_id&sort_dir=asc
         $businesses->orderBy('created_at', 'desc');
@@ -33,6 +33,7 @@ class BusinessController extends Controller
 
     public function store(Request $request)
     {
+        $regEx2 = 'bail|required|numeric';
         $data = $request->validate([
             'id' => 'bail|integer',
             'email'=> 'bail|required|string|email|max:65',
@@ -42,10 +43,10 @@ class BusinessController extends Controller
             'phone'=> 'bail|required|string|max:45',
             'address'=> 'bail|required|string|max:120',
             'location_id' => 'bail|required|integer',
-            'longitude' => 'bail|required|numeric',
-            'altitude' => 'bail|required|numeric',
-            'business_type_id' => 'bail|required|numeric',
-            'business_activity_id' => 'bail|required|numeric',
+            'longitude' => $regEx2,
+            'altitude' => $regEx2,
+            'business_type_id' => $regEx2,
+            'business_activity_id' => $regEx2,
             // 'role' => 'bail|required|string|min:4|max:45',
         ]);
         // Créer un nouvel utilisateur
@@ -94,6 +95,7 @@ class BusinessController extends Controller
         }
         // dd($business->user_id);
         $user = User::find($business->user_id);
+        $regEx1 = 'bail|numeric';
         $data = $request->validate([
             'email' => 'bail|string|email|min:5|max:65',
             'password' => 'bail|string|min:5|max:45',
@@ -102,10 +104,10 @@ class BusinessController extends Controller
             'phone' => 'bail|string|min:9|max:45',
             'address' => 'bail|string|min:5|max:120',
             'location_id' => 'bail|integer',
-            'longitude' => 'bail|numeric',
-            'altitude' => 'bail|numeric',
-            'business_type_id' => 'bail|numeric',
-            'business_activity_id' => 'bail|numeric',
+            'longitude' => $regEx1,
+            'altitude' => $regEx1,
+            'business_type_id' => $regEx1,
+            'business_activity_id' => $regEx1,
 
         ]);
         if(isset($data['email']))
